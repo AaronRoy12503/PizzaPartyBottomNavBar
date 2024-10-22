@@ -27,16 +27,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import kotlin.math.ceil
 
-// ToDo 6: Add another level of hunger that is Hungry that is in between Medium and Very hungry
-
 // ToDo 7: Using the ViewModel class, create a new ViewModel class called PizzaPartyViewModel as
 // a subclass of ViewModel. Add the following properties to the PizzaPartyViewModel - see Brightspace
 
 @Composable
-fun PizzaPartyScreen( modifier: Modifier = Modifier) {
+fun PizzaPartyScreen(modifier: Modifier = Modifier) {
     var totalPizzas by remember { mutableIntStateOf(0) }
     var numPeopleInput by remember { mutableStateOf("") }
-    var hungerLevel by remember { mutableStateOf("Medium") }
+    var hungerLevel by remember { mutableStateOf("Hungry") } // Default to "Hungry" if desired
 
     Column(
         modifier = modifier.padding(10.dp)
@@ -50,11 +48,13 @@ fun PizzaPartyScreen( modifier: Modifier = Modifier) {
             labelText = "Number of people?",
             textInput = numPeopleInput,
             onValueChange = { numPeopleInput = it },
-            modifier = modifier.padding(bottom = 16.dp).fillMaxWidth()
+            modifier = modifier
+                .padding(bottom = 16.dp)
+                .fillMaxWidth()
         )
         RadioGroup(
             labelText = "How hungry?",
-            radioOptions = listOf("Light", "Medium", "Very hungry"),
+            radioOptions = listOf("Light", "Medium", "Hungry", "Very hungry"), // Added "Hungry"
             selectedOption = hungerLevel,
             onSelected = { hungerLevel = it },
             modifier = modifier
@@ -142,7 +142,8 @@ fun calculateNumPizzas(
     val slicesPerPerson = when (hungerLevel) {
         "Light" -> 2
         "Medium" -> 3
-        else -> 5
+        "Hungry" -> 4   // Added this line
+        else -> 5       // "Very hungry" or any other input
     }
 
     return ceil(numPeople * slicesPerPerson / slicesPerPizza.toDouble()).toInt()
