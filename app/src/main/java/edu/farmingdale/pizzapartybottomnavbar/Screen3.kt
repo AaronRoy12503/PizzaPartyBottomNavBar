@@ -27,8 +27,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// ToDo 3: Make the UI look better by adding a gradient background (vertical) and padding
-
 @Composable
 fun Screen3() {
     var sliderValue by remember { mutableFloatStateOf(0.5f) }
@@ -37,8 +35,13 @@ fun Screen3() {
     val context = LocalContext.current
     Column(
         modifier = Modifier
-            .padding(horizontal = 20.dp)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color.Blue, Color.Green)
+                )
+            )
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -51,7 +54,8 @@ fun Screen3() {
 
         Text(
             fontSize = 20.sp,
-            text = "Slider Value: $sliderValue"
+            text = "Slider Value: ${String.format("%.2f", sliderValue)}",
+            modifier = Modifier.padding(vertical = 8.dp)
         )
 
         Button(
@@ -59,7 +63,8 @@ fun Screen3() {
                 val newInt = Intent(Intent.ACTION_VIEW)
                 newInt.data = Uri.parse("tel:6314202000")
                 context.startActivity(newInt)
-            }
+            },
+            modifier = Modifier.padding(vertical = 8.dp)
         ) {
             Text(fontSize = 20.sp, text = "Call me")
         }
