@@ -17,12 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.SideEffect
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-// ToDo 4: Match the UI as in drawable gpa_design.png. Use the following hints:
-// - The background color should be Color.Cyan
-// - Fix padding, alignment, and keypad type
-
-// ToDo 5:  Add the GpaAppScreen composable button that clears the input fields when clicked
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GpaAppScreen() {
@@ -43,7 +37,6 @@ fun GpaAppScreen() {
     // Declare variables for GPA result and background color
     var gpa by remember { mutableStateOf("") }
     var backColor by remember { mutableStateOf(Color.White) }
-    var btnLabel by remember { mutableStateOf("Compute GPA") }
 
     val buttonColor = Color(0xFF6550A4)
 
@@ -95,39 +88,46 @@ fun GpaAppScreen() {
             )
         )
 
+        // "Compute GPA" Button
         Button(
             onClick = {
-                if (btnLabel == "Compute GPA") {
+                val gpaVal = calGPA(grade1, grade2, grade3)
+                if (gpaVal != null && !gpaVal.isNaN()) {
+                    gpa = String.format("%.2f", gpaVal)
 
-                    val gpaVal = calGPA(grade1, grade2, grade3)
-                    if (gpaVal != null) {
-                        gpa = String.format("%.2f", gpaVal)
-
-                        // Change background color based on GPA
-                        backColor = when {
-                            gpaVal < 60 -> Color.Red
-                            gpaVal in 60.0..79.0 -> Color.Yellow
-                            else -> Color.Green
-                        }
-                        btnLabel = "Clear"
-                    } else {
-                        gpa = "Invalid input"
+                    // Change background color based on GPA
+                    backColor = when {
+                        gpaVal < 60 -> Color.Red
+                        gpaVal in 60.0..79.0 -> Color.Yellow
+                        else -> Color.Green
                     }
                 } else {
-                    // Reset all values to none
-                    grade1 = ""
-                    grade2 = ""
-                    grade3 = ""
-                    gpa = ""
+                    gpa = "Invalid input"
                     backColor = Color.White
-                    btnLabel = "Compute GPA"
                 }
             },
             colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
             modifier = Modifier
                 .padding(top = 24.dp)
         ) {
-            Text(btnLabel)
+            Text("Compute GPA")
+        }
+
+        // "Clear" Button
+        Button(
+            onClick = {
+                // Reset all values to none
+                grade1 = ""
+                grade2 = ""
+                grade3 = ""
+                gpa = ""
+                backColor = Color.White
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
+            modifier = Modifier
+                .padding(top = 8.dp)
+        ) {
+            Text("Clear")
         }
 
         if (gpa.isNotEmpty()) {
